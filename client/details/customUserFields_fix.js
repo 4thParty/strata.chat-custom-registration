@@ -1,8 +1,9 @@
 Template.customUserFields.onRendered(() => {
   const instance = Template.instance();
+
+  // disable agent email if the user is an owner
   instance.$('[name="strataProfile.agentEmail"]')
-    .closest('.form-group')
-    .toggleClass('hidden', !instance.$('[name="strataProfile.isResident"]').prop('checked'));
+    .attr('disabled', instance.$('[name="strataProfile.isOwner"]').prop('checked'));
 });
 
 Template.customUserFields.events({
@@ -23,8 +24,5 @@ Template.customUserFields.events({
 
     if (!thisChecked)
       dependsOn.prop('checked', !thisChecked).change();
-
-    const fieldAgentEmail = instance.$('[name="strataProfile.agentEmail"]');
-    fieldAgentEmail.attr('disabled', !thisChecked);
   },
 });
