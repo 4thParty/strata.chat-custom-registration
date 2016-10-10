@@ -74,7 +74,7 @@ const strataProfileSchema = new SimpleSchema({
     optional: true,
     custom: function()
     {
-      var shouldBeRequired = this.field('strataProfile.isResident').value == 1;
+      var shouldBeRequired = this.field('strataProfile.isOwner').value == 0;
 
       if (shouldBeRequired) {
         // inserts
