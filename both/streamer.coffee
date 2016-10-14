@@ -2,27 +2,26 @@
 
 if Meteor.isClient
     Meteor.startup ->
+
+        emitRegistrationEvent = (userId, skipped) ->
+            user = Meteor.users.findOne(userId)
+            if user
+                regStream.emit 'customRegistrationEvent', user.username, {skipped : skipped}
+
+
         RocketChat.callbacks.add 'submitUserDetails', (userId) =>
-            debugger 
-            regStream.emit 'customRegistrationEvent', userId
+            #debugger 
+            emitRegistrationEvent userId, false
 
             return userId
         , RocketChat.callbacks.priority.LOW
 
         RocketChat.callbacks.add 'skipUserDetails', (userId) =>
-            debugger 
-            regStream.emit 'customRegistrationEvent', userId
+            #debugger 
+            emitRegistrationEvent userId, true
 
             return userId            
         , RocketChat.callbacks.priority.LOW
 else
-    regStream.allowRead 'custom-registration', 'all'
-    regStream.allowWrite 'custom-registration', 'all'
-    regStream.allowEmit 'custom-registration', 'all'
-
-    regStream.allowRead 'customRegistrationEvent', 'all'
-    regStream.allowWrite 'customRegistrationEvent', 'all'
-    #regStream.allowEmit 'customRegistrationEvent', (eventName, msg, options) ->
-    regStream.allowEmit 'customRegistrationEvent', 'all'
-        #debugger
-        #return true
+    regStream.allowRead 'all'
+    regStream.allowWrite 'all'
